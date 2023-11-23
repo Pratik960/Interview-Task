@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Task 2</title>
+</head>
+
+<body>
+
+    <h2>Task 2</h2>
+
+    <label for="dropdown">Select Value:</label>
+    <select id="dropdown">
+        <option value="Select Value" disabled selected>Select Value</option>
+        <option value="H">H</option>
+        <option value="T">T</option>
+    </select>
+
+    <button onclick="submit()">Submit</button>
+    <button onclick="reset()">Reset</button>
+
+    <table id="resultTable"></table>
+
+    <script>
+        let sequence = "";
+
+        function reset() {
+            sequence = "";
+            const resultTable = document.getElementById("resultTable");
+            resultTable.innerHTML = "";
+        }
+
+        function groupConsecutive(inputSequence) {
+            const result = [];
+            let currentArray = [];
+
+            for (const ip of inputSequence) {
+                if (ip === currentArray[currentArray.length - 1]) {
+                    currentArray.push(ip);
+                } else {
+                    result.push(currentArray);
+                    currentArray = [ip];
+                }
+            }
+
+            result.push(currentArray);
+            return result;
+        }
+
+        function submit() {
+            const dropdown = document.getElementById("dropdown");
+            const selectedValue = dropdown.options[dropdown.selectedIndex].value;
+            if (selectedValue !== "Select Value") {
+                sequence += selectedValue;
+
+                const groupedArrays = groupConsecutive(sequence);
+                const resultTable = document.getElementById("resultTable");
+                resultTable.innerHTML = "";
+
+                const maxLength = Math.max(...groupedArrays.map(array => array.length));
+
+                for (let i = 0; i < maxLength; i++) {
+                    const row = resultTable.insertRow();
+
+                    for (const array of groupedArrays) {
+                        const cell = row.insertCell();
+                        cell.textContent = array[i] || '';
+                    }
+                }
+
+                document.getElementById("dropdown").selectedIndex = 0;
+            }
+        }
+    </script>
+</body>
+
+</html>
